@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SerialConnectActivity">
+
+    <com.ocean.bluectrl.layouts.GlobalBackground
+        android:id="@+id/background_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <View
+        android:id="@+id/bottom_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginVertical="5dp"
+        android:layout_marginHorizontal="5dp"
+        android:background="@drawable/l0_background">
+    </View>
+
+    <LinearLayout
+        android:id="@+id/device_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/l1_background"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:padding="5dp"
+        app:layout_constraintEnd_toEndOf="@id/bottom_view"
+        app:layout_constraintStart_toStartOf="@id/bottom_view"
+        app:layout_constraintTop_toTopOf="@id/bottom_view"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/devicename_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginVertical="5dp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="DeviceName"/>
+
+        <TextView
+            android:id="@+id/deviceaddress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="3dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/devicename_text"
+            tools:text="de:vi:ce:ad:dr:es"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/connect_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/device_info"
+        app:layout_constraintStart_toStartOf="@id/bottom_view"
+        app:layout_constraintEnd_toEndOf="@id/bottom_view"
+        app:layout_constraintBottom_toBottomOf="@id/bottom_view"
+        android:background="@drawable/l1_background"/>
+
+    <TextView
+        android:id="@+id/text_receive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bluetooth Receive"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="5dp"
+        app:layout_constraintTop_toTopOf="@id/connect_view"
+        app:layout_constraintStart_toStartOf="@id/connect_view"
+        android:background="@drawable/l2_background"/>
+
+    <ScrollView
+        android:id="@+id/receive_scrollview"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/l2_background"
+        app:layout_constraintTop_toBottomOf="@id/text_receive"
+        app:layout_constraintStart_toStartOf="@id/connect_view"
+        app:layout_constraintEnd_toEndOf="@id/connect_view">
+
+        <TextView
+            android:id="@+id/receive_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="5dp"
+            android:textSize="15sp"
+            android:layout_margin="5dp"
+            android:textIsSelectable="true" />
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/text_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bluetooth Send"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:layout_marginHorizontal="5dp"
+        app:layout_constraintTop_toBottomOf="@id/receive_scrollview"
+        app:layout_constraintStart_toStartOf="@id/connect_view"
+        android:background="@drawable/l2_background"/>
+
+    <EditText
+        android:id="@+id/send_edittext"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginHorizontal="5dp"
+        android:maxLength="-1"
+        android:lines="2"
+        android:gravity="top"
+        android:padding="5dp"
+        android:background="@drawable/l2_background"
+        app:layout_constraintTop_toBottomOf="@+id/text_send"
+        app:layout_constraintStart_toStartOf="@id/connect_view"
+        app:layout_constraintEnd_toEndOf="@id/connect_view"
+        android:autofillHints=""
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/send_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginHorizontal="5dp"
+        app:layout_constraintStart_toStartOf="@id/connect_view"
+        app:layout_constraintEnd_toEndOf="@id/connect_view"
+        android:text="发送"
+        android:background="@drawable/l2_background"
+        app:layout_constraintTop_toBottomOf="@id/send_edittext"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

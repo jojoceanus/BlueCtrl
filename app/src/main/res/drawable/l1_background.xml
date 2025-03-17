@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- 设置背景颜色 -->
+    <solid android:color="@color/transparent45" /> <!-- 你可以更改为你想要的颜色 -->
+
+    <!-- 设置圆角半径 -->
+    <corners android:radius="16dp" /> <!-- 你可以调整这个值来改变圆角大小 -->
+
+</shape>

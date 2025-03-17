@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="7dp" />
+            <solid android:color="@color/transparent70" /> <!-- 滑块颜色，与进度条一致 -->
+            <size android:width="20dp" android:height="25dp" /> <!-- 滑块大小，可以根据需要调整 -->
+        </shape>
+    </item>
+</selector>
