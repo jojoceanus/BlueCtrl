@@ -3,6 +3,7 @@ package com.ocean.bluectrl;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -37,9 +38,11 @@ import com.ocean.bluectrl.receivers.BluetoothDeviceReceiver;
 import com.ocean.bluectrl.util.PermissionUtil;
 import com.ocean.bluectrl.util.ColorStyleUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -160,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
         findAdapter.setOnItemClickListener(new BluetoothDeviceAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                Toast.makeText(MainActivity.this, "pair with: " + findDevices.get(position).getName(), Toast.LENGTH_SHORT).show();
+                pairWithDevice(position);
 
             }
         });
@@ -225,6 +230,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void pairWithDevice(int position) {
+        BluetoothDevice device = findDevices.get(position);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    BluetoothSocket socket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
+                    socket.connect();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "配对成功", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "配对失败", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                refreshList();
+            }
+        }).start();
+    }
+
     private void launchConnectActivity(int position) {
         if (switchFlag == 0) {
             Intent intent = new Intent(MainActivity.this, SerialConnectActivity.class);
@@ -241,7 +275,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "activity undefined", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
     private void showEasterEgg() {

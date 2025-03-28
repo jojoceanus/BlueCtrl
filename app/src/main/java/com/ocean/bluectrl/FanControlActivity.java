@@ -22,13 +22,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FanControlActivity extends AppCompatActivity {
 
     private TextView deviceNameText;
     private TextView deviceAddressText;
-    private TextView speedSet;
     private TextView speedGet;
+    private TextView humidityGet;
+    private TextView temperatureGet;
     private SeekBar speedControl;
     private int setSpeed;
     private BluetoothSocket socket;
@@ -38,6 +41,8 @@ public class FanControlActivity extends AppCompatActivity {
     private BluetoothHelper bluetoothHelper;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private final String endMarket = "#";
+    private final String startMarket = "$";
+    private final String devideMarket = " ";
     private String deviceName;
     private String deviceAddress;
     private Handler handler;
@@ -57,8 +62,9 @@ public class FanControlActivity extends AppCompatActivity {
 
         deviceNameText = findViewById(R.id.devicename_text);
         deviceAddressText = findViewById(R.id.deviceaddress_text);
-        speedSet = findViewById(R.id.speedset_text);
         speedGet = findViewById(R.id.speedget_text);
+        humidityGet = findViewById(R.id.humidity_text);
+        temperatureGet = findViewById(R.id.temperature_text);
         speedControl = findViewById(R.id.speedcontrol_seekbar);
         setSpeed = 0;
 
@@ -82,8 +88,43 @@ public class FanControlActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String show = String.format(Locale.CHINA ,"实际转速：" + message);
+                        /*
+                        String show = String.format(Locale.CHINA ,"转速：" + message);
                         speedGet.setText(show);
+                        */
+
+                        // 使用正则表达式匹配所有独立消息单元（格式：$... #）
+                        Pattern pattern = Pattern.compile("\\$([^#]+)#");
+                        Matcher matcher = pattern.matcher(message);
+
+                        while (matcher.find()) {
+                            String payload = matcher.group(1).trim(); // 提取$和#之间的内容
+                            String[] parts = payload.split(" ", 2); // 限制分割次数
+
+                            if (parts.length < 2) {
+                                Log.e("Protocol", "Incomplete data: " + payload);
+                                continue;
+                            }
+
+                            String tag = parts[0].trim();
+                            String data = parts[1].trim();
+
+                            // 根据标签路由处理
+                            switch (tag) {
+                                case "SPEED":
+                                    speedGet.setText(String.format(Locale.CHINA, "转速：%srpm", data));
+                                    break;
+                                case "HUMIDITY":
+                                    humidityGet.setText(String.format(Locale.CHINA, "湿度：%s%%", data));
+                                    break;
+                                case "TEMPERATURE":
+                                    temperatureGet.setText(String.format(Locale.CHINA, "温度：%s℃", data));
+                                    break;
+                                default:
+                                    Log.w("Protocol", "Unknown tag: " + tag);
+                                    break;
+                            }
+                        }
                     }
                 });
             }
@@ -113,15 +154,16 @@ public class FanControlActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 String show = String.format(Locale.CHINA ,"设定风速：%d%%", progress);
                 setSpeed = progress;
-                speedSet.setText(show);
-                String messageToSend = progress + endMarket;
+                String messageToSend = bluetoothMessage("SPEED", progress);
                 bluetoothHelper.sendMessage(messageToSend);
-/*                if (sendFlag) {
+                /*
+                if (sendFlag) {
                     String messageToSend = progress + endMarket;
                     bluetoothHelper.sendMessage(messageToSend);
                     sendFlag = false;
                     handler.postDelayed(resetRunnable, 200);
-                }*/
+                }
+                */
             }
 
             @Override
@@ -141,6 +183,14 @@ public class FanControlActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         bluetoothHelper.closeConnection();
+    }
+
+    private String bluetoothMessage(String sendTag, int sendData) {
+        return startMarket + sendTag + devideMarket + sendData + endMarket;
+    }
+
+    private String bluetoothMessage(String sendTag, String sendData) {
+        return startMarket + sendTag + devideMarket + sendData + endMarket;
     }
 
 }

@@ -82,12 +82,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Status Monitor"
-        android:layout_marginTop="10dp"
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="10dp"
         android:layout_marginHorizontal="5dp"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="5dp"
         app:layout_constraintTop_toTopOf="@id/interact_view"
         app:layout_constraintStart_toStartOf="@id/interact_view"
         android:background="@drawable/l2_background"/>
@@ -97,37 +96,52 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp"
+        android:padding="5dp"
         android:layout_marginHorizontal="5dp"
         android:layout_marginVertical="5dp"
         app:layout_constraintStart_toStartOf="@id/interact_view"
         app:layout_constraintEnd_toEndOf="@id/interact_view"
         app:layout_constraintTop_toBottomOf="@id/text_monitor"
-        android:background="@drawable/l2_background">
+        android:background="@drawable/l1_background">
 
         <TextView
-            android:id="@+id/speedset_text"
+            android:id="@+id/humidity_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="10dp"
+            android:padding="8dp"
             android:layout_marginHorizontal="5dp"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:gravity="center"
-            android:text="设定风速："
-            android:textSize="15sp"/>
+            android:text="湿度：null"
+            android:textSize="13sp"
+            android:background="@drawable/l2_background"/>
+
+        <TextView
+            android:id="@+id/temperature_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="5dp"
+            android:gravity="center"
+            android:text="温度：null"
+            android:textSize="13sp"
+            android:background="@drawable/l2_background"/>
 
         <TextView
             android:id="@+id/speedget_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="10dp"
+            android:padding="8dp"
             android:layout_marginHorizontal="5dp"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:gravity="center"
-            android:text="测量风速："
-            android:textSize="15sp"/>
+            android:text="风速：null"
+            android:textSize="13sp"
+            android:background="@drawable/l2_background"/>
 
     </LinearLayout>
 
@@ -140,7 +154,7 @@
         android:textStyle="bold"
         android:padding="10dp"
         android:layout_marginHorizontal="5dp"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="5dp"
         app:layout_constraintTop_toBottomOf="@id/monitor_layout"
         app:layout_constraintStart_toStartOf="@id/interact_view"
         android:background="@drawable/l2_background"/>
