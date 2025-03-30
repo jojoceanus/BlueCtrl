@@ -109,6 +109,12 @@ public class ColorStyleUtil {
         return Color.argb((int) a, (int) r, (int) g, (int) b);
     }
 
+    // 获取颜色
+    public static int getColor(Activity act, int colorType) {
+        int[] colors = readColorsFromPreferences(act);
+        return colors[colorType];
+    }
+
     //以下部分可用于设置视图样式
 
     public static void setStatusBarColor(Activity act, ImageView imageView, int position) {

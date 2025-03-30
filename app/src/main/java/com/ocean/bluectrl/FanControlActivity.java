@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -15,8 +18,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
 import com.ocean.bluectrl.helpers.BluetoothHelper;
+import com.ocean.bluectrl.layouts.GlobalBackground;
+import com.ocean.bluectrl.util.ColorStyleUtil;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,19 +35,16 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FanControlActivity extends AppCompatActivity {
+public class FanControlActivity extends AppCompatActivity implements MaunalControlFragment.OnProgressSendListener{
 
     private TextView deviceNameText;
     private TextView deviceAddressText;
     private TextView speedGet;
     private TextView humidityGet;
     private TextView temperatureGet;
-    private SeekBar speedControl;
+    private ViewPager viewPager;
+    private TabLayout methodControl;
     private int setSpeed;
-    private BluetoothSocket socket;
-    private OutputStream outputStream;
-    private InputStream inputStream;
-    private BluetoothAdapter bluetoothAdapter;
     private BluetoothHelper bluetoothHelper;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private final String endMarket = "#";
@@ -45,9 +52,6 @@ public class FanControlActivity extends AppCompatActivity {
     private final String devideMarket = " ";
     private String deviceName;
     private String deviceAddress;
-    private Handler handler;
-    private Runnable resetRunnable;
-    private boolean sendFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +69,22 @@ public class FanControlActivity extends AppCompatActivity {
         speedGet = findViewById(R.id.speedget_text);
         humidityGet = findViewById(R.id.humidity_text);
         temperatureGet = findViewById(R.id.temperature_text);
-        speedControl = findViewById(R.id.speedcontrol_seekbar);
+        viewPager = findViewById(R.id.viewPager);
+        methodControl = findViewById(R.id.control_method);
         setSpeed = 0;
+
+        //获取全局背景并设置颜色
+        GlobalBackground backgroundLayout = findViewById(R.id.background_layout);
+        ImageView imageView = backgroundLayout.getImageView();
+        View transparentView = backgroundLayout.getBackgroundView();
+        ColorStyleUtil.setViewColor(this, imageView, transparentView, ColorStyleUtil.VIBRANT_COLOR, 0.75f);
+        //设置状态栏颜色
+        ColorStyleUtil.setStatusBarColor(this, imageView, ColorStyleUtil.VIBRANT_COLOR);
+        //设置全部的控件的颜色
+        ColorStyleUtil.setAllViewBackgroundColors(this, imageView, ColorStyleUtil.MUTED_COLOR, 0.5f);
+
+        //设置tabindicator颜色
+        methodControl.setSelectedTabIndicatorColor(ColorStyleUtil.getColor(this, ColorStyleUtil.MUTED_DARK_COLOR));
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("DEVICE_NAME") && intent.hasExtra("DEVICE_ADDRESS")) {
@@ -79,6 +97,11 @@ public class FanControlActivity extends AppCompatActivity {
             Intent errorIntent = new Intent(FanControlActivity.this, MainActivity.class);
             startActivity(errorIntent);
         }
+
+        // 控制方式适配器
+        MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        methodControl.setupWithViewPager(viewPager);
 
         bluetoothHelper = BluetoothHelper.getInstance();
         bluetoothHelper.connectToDevice(deviceAddress);
@@ -112,7 +135,7 @@ public class FanControlActivity extends AppCompatActivity {
                             // 根据标签路由处理
                             switch (tag) {
                                 case "SPEED":
-                                    speedGet.setText(String.format(Locale.CHINA, "转速：%srpm", data));
+                                    speedGet.setText(String.format(Locale.CHINA, "转速：%srps", data));
                                     break;
                                 case "HUMIDITY":
                                     humidityGet.setText(String.format(Locale.CHINA, "湿度：%s%%", data));
@@ -140,30 +163,14 @@ public class FanControlActivity extends AppCompatActivity {
             }
         });
 
-        sendFlag = true;
-        handler = new Handler(Looper.getMainLooper());
-        resetRunnable = new Runnable() {
-            @Override
-            public void run() {
-                sendFlag = !sendFlag;
-            }
-        };
 
-        speedControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        /*speedControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 String show = String.format(Locale.CHINA ,"设定风速：%d%%", progress);
                 setSpeed = progress;
                 String messageToSend = bluetoothMessage("SPEED", progress);
                 bluetoothHelper.sendMessage(messageToSend);
-                /*
-                if (sendFlag) {
-                    String messageToSend = progress + endMarket;
-                    bluetoothHelper.sendMessage(messageToSend);
-                    sendFlag = false;
-                    handler.postDelayed(resetRunnable, 200);
-                }
-                */
             }
 
             @Override
@@ -175,7 +182,7 @@ public class FanControlActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
-        });
+        });*/
 
     }
 
@@ -191,6 +198,37 @@ public class FanControlActivity extends AppCompatActivity {
 
     private String bluetoothMessage(String sendTag, String sendData) {
         return startMarket + sendTag + devideMarket + sendData + endMarket;
+    }
+
+    @Override
+    public void onProgressSent(int progress) {
+        //sendBluetoothData(progress);
+        setSpeed = progress;
+        String messageToSend = bluetoothMessage("SPEED", progress);
+        bluetoothHelper.sendMessage(messageToSend);
+    }
+
+    class MyPagerAdapter extends FragmentPagerAdapter {
+        private final String[] tabTitles = new String[]{"Maunal", "Automatic"};
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return (position == 0) ? new MaunalControlFragment() : new AutomaticControlFragment();
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabTitles[position];
+        }
     }
 
 }

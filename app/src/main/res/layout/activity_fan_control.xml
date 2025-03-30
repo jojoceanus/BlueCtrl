@@ -146,10 +146,10 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/text_controller"
+        android:id="@+id/text_control"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fan Controller"
+        android:text="Fan Control"
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="10dp"
@@ -159,7 +159,35 @@
         app:layout_constraintStart_toStartOf="@id/interact_view"
         android:background="@drawable/l2_background"/>
 
-    <LinearLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/control_method"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:tabRippleColor="@null"
+        app:tabIndicatorHeight="3dp"
+        app:tabIndicatorFullWidth="false"
+        app:layout_constraintStart_toEndOf="@id/text_control"
+        app:layout_constraintEnd_toEndOf="@id/monitor_layout"
+        app:layout_constraintTop_toTopOf="@id/text_control"
+        app:layout_constraintBottom_toBottomOf="@id/text_control"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/l2_background"/>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginVertical="5dp"
+        android:layout_marginHorizontal="5dp"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="@id/interact_view"
+        app:layout_constraintEnd_toEndOf="@id/interact_view"
+        app:layout_constraintTop_toBottomOf="@id/control_method"
+        app:layout_constraintBottom_toBottomOf="@id/interact_view"
+        android:background="@drawable/l1_background"/>
+
+<!--unused-->
+<!--    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -179,8 +207,6 @@
             android:thumb="@drawable/seekbar_thumb"
             android:max="100"/>
         
-    </LinearLayout>
-
-
+    </LinearLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
