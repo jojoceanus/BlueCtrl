@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,7 @@ import android.widget.SeekBar;
  * create an instance of this fragment.
  */
 public class MaunalControlFragment extends Fragment {
-
+    private FanControlViewModel viewModel;
     // 定义数据传输接口
     public interface OnProgressSendListener {
         void onProgressSent(int progress);
@@ -82,12 +83,15 @@ public class MaunalControlFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_maunal_control, container, false);*/
         View view = inflater.inflate(R.layout.fragment_maunal_control, container, false);
         SeekBar seekBar = view.findViewById(R.id.speedcontrol_seekbar);
+        viewModel = new ViewModelProvider(requireActivity()).get(FanControlViewModel.class);
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 // 处理SeekBar进度变化
                 if (sendListener != null) {
                     sendListener.onProgressSent(progress); // 触发回调
+                    viewModel.setText("");
                 }
             }
 

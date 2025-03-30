@@ -186,27 +186,4 @@
         app:layout_constraintBottom_toBottomOf="@id/interact_view"
         android:background="@drawable/l1_background"/>
 
-<!--unused-->
-<!--    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="15dp"
-        app:layout_constraintTop_toBottomOf="@id/text_controller"
-        app:layout_constraintStart_toStartOf="@id/interact_view"
-        app:layout_constraintEnd_toEndOf="@id/interact_view"
-        android:layout_marginHorizontal="5dp"
-        android:layout_marginVertical="5dp"
-        android:background="@drawable/l2_background">
-        
-        <SeekBar
-            android:id="@+id/speedcontrol_seekbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:progressDrawable="@drawable/seekbar_progress"
-            android:thumb="@drawable/seekbar_thumb"
-            android:max="100"/>
-        
-    </LinearLayout>-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>

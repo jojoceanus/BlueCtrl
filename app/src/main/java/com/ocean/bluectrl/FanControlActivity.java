@@ -35,7 +35,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FanControlActivity extends AppCompatActivity implements MaunalControlFragment.OnProgressSendListener{
+public class FanControlActivity extends AppCompatActivity implements MaunalControlFragment.OnProgressSendListener, AutomaticControlFragment.OnBTClickListener{
 
     private TextView deviceNameText;
     private TextView deviceAddressText;
@@ -163,27 +163,6 @@ public class FanControlActivity extends AppCompatActivity implements MaunalContr
             }
         });
 
-
-        /*speedControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                String show = String.format(Locale.CHINA ,"设定风速：%d%%", progress);
-                setSpeed = progress;
-                String messageToSend = bluetoothMessage("SPEED", progress);
-                bluetoothHelper.sendMessage(messageToSend);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });*/
-
     }
 
     @Override
@@ -205,6 +184,24 @@ public class FanControlActivity extends AppCompatActivity implements MaunalContr
         //sendBluetoothData(progress);
         setSpeed = progress;
         String messageToSend = bluetoothMessage("SPEED", progress);
+        bluetoothHelper.sendMessage(messageToSend);
+    }
+
+    @Override
+    public void clickBTTemperature(int temperature) {
+        String messageToSend = bluetoothMessage("HOLDT", temperature);
+        bluetoothHelper.sendMessage(messageToSend);
+    }
+
+    @Override
+    public void clickBTHumidity(int humidity) {
+        String messageToSend = bluetoothMessage("HOLDH", humidity);
+        bluetoothHelper.sendMessage(messageToSend);
+    }
+
+    @Override
+    public void clickBTSimulate() {
+        String messageToSend = bluetoothMessage("NATW", 0);
         bluetoothHelper.sendMessage(messageToSend);
     }
 

@@ -129,7 +129,7 @@ public class SerialConnectActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String messageToSend = sendEditText.getText().toString() + endMarket;
+                String messageToSend = sendEditText.getText().toString();
                 bluetoothHelper.sendMessage(messageToSend);
                 //sendtext.setText(""); // 清空输入框
             }
