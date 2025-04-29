@@ -45,7 +45,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
-
     private int clickCount = 0;
     private final int REQUIRED_CLICKS = 7; // 需要的点击次数
     private final long DURATION_MILLIS = 2000; // 持续时间，毫秒
@@ -110,14 +109,18 @@ public class MainActivity extends AppCompatActivity {
         pairRecycleView.setAdapter(pairAdapter);
         switchFlag = 1;
 
-        //获取全局背景并设置颜色
+        titleText.setText(R.string.bluetooth_device);
+        refreshButton.setText(R.string.refresh);
+        switchButton.setText(R.string.serial);
+
+        // 获取全局背景并设置颜色
         GlobalBackground backgroundLayout = findViewById(R.id.background_layout);
         ImageView imageView = backgroundLayout.getImageView();
         View transparentView = backgroundLayout.getBackgroundView();
         ColorStyleUtil.setViewColor(this, imageView, transparentView, ColorStyleUtil.VIBRANT_COLOR, 0.75f);
-        //设置状态栏颜色
+        // 设置状态栏颜色
         ColorStyleUtil.setStatusBarColor(this, imageView, ColorStyleUtil.VIBRANT_COLOR);
-        //设置全部的控件的颜色
+        // 设置全部的控件的颜色
         ColorStyleUtil.setAllViewBackgroundColors(this, imageView, ColorStyleUtil.MUTED_COLOR, 0.5f);
 
         bluetoothDeviceReceiver = new BluetoothDeviceReceiver(new BluetoothDeviceReceiver.OnDeviceFoundListener() {
@@ -188,10 +191,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (switchFlag == 0) {
                     switchFlag = 1;
-                    switchButton.setText("custom");
+                    switchButton.setText(R.string.custom);
                 } else if (switchFlag == 1) {
                     switchFlag = 0;
-                    switchButton.setText("serial");
+                    switchButton.setText(R.string.serial);
                 }
             }
         });

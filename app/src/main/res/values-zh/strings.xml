@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BlueCtrl</string>
+    <string name="bluetooth_device">蓝牙设备</string>
+    <string name="refresh">刷新</string>
+    <string name="serial">串口</string>
+    <string name="custom">自定</string>
+
+    <string name="status_monitor">状态监测</string>
+    <string name="fan_control">风扇控制</string>
+    <string name="humidity">湿度</string>
+    <string name="temperature">温度</string>
+    <string name="fan_speed">转速</string>
+    <string name="no_data">无数据</string>
+    <string name="humidity_show">%1$s:%2$s</string>
+    <string name="temperature_show">%1$s:%2$s</string>
+    <string name="fan_speed_show">%1$s:%2$s</string>
+</resources>

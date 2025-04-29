@@ -1,5 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BlueCtrl</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="bluetooth_device">Bluetooth Device</string>
+    <string name="refresh">refresh</string>
+    <string name="serial">serial</string>
+    <string name="custom">custom</string>
+
+    <string name="status_monitor">Status Monitor</string>
+    <string name="fan_control">Fan Control</string>
+    <string name="humidity">humidity</string>
+    <string name="temperature">temperature</string>
+    <string name="fan_speed">fan speed</string>
+    <string name="no_data">null</string>
+    <string name="humidity_show">%1$s:%2$s</string>
+    <string name="temperature_show">%1$s:%2$s</string>
+    <string name="fan_speed_show">%1$s:%2$s</string>
 </resources>

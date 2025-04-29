@@ -36,7 +36,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FanControlActivity extends AppCompatActivity implements MaunalControlFragment.OnProgressSendListener, AutomaticControlFragment.OnBTClickListener{
-
     private TextView deviceNameText;
     private TextView deviceAddressText;
     private TextView speedGet;
@@ -44,6 +43,8 @@ public class FanControlActivity extends AppCompatActivity implements MaunalContr
     private TextView temperatureGet;
     private ViewPager viewPager;
     private TabLayout methodControl;
+    private TextView monitorText;
+    private TextView controlText;
     private int setSpeed;
     private BluetoothHelper bluetoothHelper;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -71,7 +72,15 @@ public class FanControlActivity extends AppCompatActivity implements MaunalContr
         temperatureGet = findViewById(R.id.temperature_text);
         viewPager = findViewById(R.id.viewPager);
         methodControl = findViewById(R.id.control_method);
+        monitorText = findViewById(R.id.text_monitor);
+        controlText = findViewById(R.id.text_control);
         setSpeed = 0;
+
+        monitorText.setText(R.string.status_monitor);
+        controlText.setText(R.string.fan_control);
+        humidityGet.setText(getString(R.string.humidity_show, getString(R.string.humidity), getString(R.string.no_data)));
+        temperatureGet.setText(getString(R.string.temperature_show, getString(R.string.temperature), getString(R.string.no_data)));
+        speedGet.setText(getString(R.string.fan_speed_show, getString(R.string.fan_speed), getString(R.string.no_data)));
 
         //获取全局背景并设置颜色
         GlobalBackground backgroundLayout = findViewById(R.id.background_layout);
