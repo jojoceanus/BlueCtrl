@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
         titleText.setText(R.string.bluetooth_device);
         refreshButton.setText(R.string.refresh);
-        switchButton.setText(R.string.serial);
+        switchButton.setText(R.string.custom);
 
         // 获取全局背景并设置颜色
         GlobalBackground backgroundLayout = findViewById(R.id.background_layout);
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("DEVICE_ADDRESS", pairDevices.get(position).getAddress());
             startActivity(intent);
         } else if (switchFlag == 1) {
-            if (pairDevices.get(position).getName().equals("ESP32_BLUETOOTH")) {
+            if (pairDevices.get(position).getName().equals("智能风扇")) {
                 Intent intent = new Intent(MainActivity.this, FanControlActivity.class);
                 intent.putExtra("DEVICE_NAME", pairDevices.get(position).getName());
                 intent.putExtra("DEVICE_ADDRESS", pairDevices.get(position).getAddress());

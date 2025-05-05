@@ -15,4 +15,7 @@
     <string name="humidity_show">%1$s:%2$s</string>
     <string name="temperature_show">%1$s:%2$s</string>
     <string name="fan_speed_show">%1$s:%2$s</string>
+
+    <string name="maunal">手动</string>
+    <string name="auto">自动</string>
 </resources>

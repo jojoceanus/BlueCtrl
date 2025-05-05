@@ -53,6 +53,25 @@ public class FanControlActivity extends AppCompatActivity implements MaunalContr
     private final String devideMarket = " ";
     private String deviceName;
     private String deviceAddress;
+    public enum Tags {
+        NATW(0x01),
+        HOLDH(0x02),
+        HOLDT(0x03),
+        SPEED(0x04);
+
+        private final int value;
+
+        // 构造函数，用于初始化每个枚举值的整数值
+        Tags(int value) {
+            this.value = value;
+        }
+
+        // 获取枚举对应的整数值
+        public int getValue() {
+            return value;
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,10 +139,6 @@ public class FanControlActivity extends AppCompatActivity implements MaunalContr
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        /*
-                        String show = String.format(Locale.CHINA ,"转速：" + message);
-                        speedGet.setText(show);
-                        */
 
                         // 使用正则表达式匹配所有独立消息单元（格式：$... #）
                         Pattern pattern = Pattern.compile("\\$([^#]+)#");
@@ -184,38 +199,39 @@ public class FanControlActivity extends AppCompatActivity implements MaunalContr
         return startMarket + sendTag + devideMarket + sendData + endMarket;
     }
 
-    private String bluetoothMessage(String sendTag, String sendData) {
-        return startMarket + sendTag + devideMarket + sendData + endMarket;
-    }
-
     @Override
     public void onProgressSent(int progress) {
         //sendBluetoothData(progress);
         setSpeed = progress;
-        String messageToSend = bluetoothMessage("SPEED", progress);
+        String messageToSend = bluetoothMessage(Tags.SPEED, progress);
         bluetoothHelper.sendMessage(messageToSend);
     }
 
     @Override
     public void clickBTTemperature(int temperature) {
-        String messageToSend = bluetoothMessage("HOLDT", temperature);
+        String messageToSend = bluetoothMessage(Tags.HOLDT, temperature);
         bluetoothHelper.sendMessage(messageToSend);
     }
 
     @Override
     public void clickBTHumidity(int humidity) {
-        String messageToSend = bluetoothMessage("HOLDH", humidity);
+        String messageToSend = bluetoothMessage(Tags.HOLDH, humidity);
         bluetoothHelper.sendMessage(messageToSend);
     }
 
     @Override
     public void clickBTSimulate() {
-        String messageToSend = bluetoothMessage("NATW", 0);
+        String messageToSend = bluetoothMessage(Tags.NATW, 0);
         bluetoothHelper.sendMessage(messageToSend);
     }
 
+    private String bluetoothMessage(Tags sendTag, int sendData) {
+        char tagHex = (char) sendTag.getValue();
+        return startMarket + tagHex + devideMarket + sendData + endMarket;
+    }
+
     class MyPagerAdapter extends FragmentPagerAdapter {
-        private final String[] tabTitles = new String[]{"Maunal", "Automatic"};
+        private final String[] tabTitles = new String[]{getString(R.string.maunal), getString(R.string.auto)};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);

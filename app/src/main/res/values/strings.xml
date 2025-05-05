@@ -16,4 +16,7 @@
     <string name="humidity_show">%1$s:%2$s</string>
     <string name="temperature_show">%1$s:%2$s</string>
     <string name="fan_speed_show">%1$s:%2$s</string>
+
+    <string name="maunal">Maunal</string>
+    <string name="auto">Auto</string>
 </resources>
