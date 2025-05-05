@@ -57,7 +57,9 @@ public class FanControlActivity extends AppCompatActivity implements MaunalContr
         NATW(0x01),
         HOLDH(0x02),
         HOLDT(0x03),
-        SPEED(0x04);
+        SPEED(0x04),
+        HUMIDITY(0x05),
+        TEMPERATURE(0x06);
 
         private final int value;
 
@@ -69,6 +71,17 @@ public class FanControlActivity extends AppCompatActivity implements MaunalContr
         // 获取枚举对应的整数值
         public int getValue() {
             return value;
+        }
+
+        // 根据整数值获取对应的枚举
+        public static Tags fromValue(int value) {
+            for (Tags tag : Tags.values()) {
+                if (tag.getValue() == value) {
+                    return tag;
+                }
+            }
+            throw new IllegalArgumentException("Invalid tag value: " + value);
+            // 或者你可以返回 null / 默认值
         }
 
     }
@@ -153,19 +166,21 @@ public class FanControlActivity extends AppCompatActivity implements MaunalContr
                                 continue;
                             }
 
-                            String tag = parts[0].trim();
+                            //String tag = parts[0].trim();
+                            int tagValue = Integer.parseInt(parts[0].trim());
+                            Tags tag = Tags.fromValue(tagValue);
                             String data = parts[1].trim();
 
                             // 根据标签路由处理
                             switch (tag) {
-                                case "SPEED":
-                                    speedGet.setText(String.format(Locale.CHINA, "转速：%srps", data));
+                                case SPEED:
+                                    speedGet.setText(String.format(getString(R.string.fan_speed_show), getString(R.string.fan_speed), data));
                                     break;
-                                case "HUMIDITY":
-                                    humidityGet.setText(String.format(Locale.CHINA, "湿度：%s%%", data));
+                                case HUMIDITY:
+                                    humidityGet.setText(String.format(getString(R.string.humidity_show), getString(R.string.humidity), data));
                                     break;
-                                case "TEMPERATURE":
-                                    temperatureGet.setText(String.format(Locale.CHINA, "温度：%s℃", data));
+                                case TEMPERATURE:
+                                    temperatureGet.setText(String.format(getString(R.string.temperature_show), getString(R.string.temperature), data));
                                     break;
                                 default:
                                     Log.w("Protocol", "Unknown tag: " + tag);

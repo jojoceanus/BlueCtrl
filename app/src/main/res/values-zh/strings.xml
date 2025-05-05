@@ -12,9 +12,9 @@
     <string name="temperature">温度</string>
     <string name="fan_speed">转速</string>
     <string name="no_data">无数据</string>
-    <string name="humidity_show">%1$s:%2$s</string>
-    <string name="temperature_show">%1$s:%2$s</string>
-    <string name="fan_speed_show">%1$s:%2$s</string>
+    <string name="humidity_show">%1$s:%2$s%%</string>
+    <string name="temperature_show">%1$s:%2$s℃</string>
+    <string name="fan_speed_show">%1$s:%2$srps</string>
 
     <string name="maunal">手动</string>
     <string name="auto">自动</string>
