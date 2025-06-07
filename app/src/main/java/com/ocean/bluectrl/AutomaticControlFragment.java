@@ -110,6 +110,7 @@ public class AutomaticControlFragment extends Fragment {
                     if (0 < setT && setT < 50) {
                         textMode.setText("恒定温度" + setTemperature + "℃");
                         btClickListener.clickBTTemperature(setT);
+                        etTemperature.setText("");
                     } else {
                         Toast.makeText(getActivity(), "设定温度异常", Toast.LENGTH_SHORT).show();
                     }
@@ -128,6 +129,7 @@ public class AutomaticControlFragment extends Fragment {
                     if (0 <= setH && setH <= 100) {
                         textMode.setText("恒定湿度" + setHumidity + "%");
                         btClickListener.clickBTHumidity(setH);
+                        etHumidity.setText("");
                     } else {
                         Toast.makeText(getActivity(), "设定湿度异常", Toast.LENGTH_SHORT).show();
                     }

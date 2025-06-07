@@ -4,6 +4,8 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -62,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
     private Button refreshButton;
     private Button switchButton;
     private int switchFlag;
-    private static final String[] permissions = new String[] {
-            android.Manifest.permission.BLUETOOTH_SCAN,
-            android.Manifest.permission.BLUETOOTH_CONNECT,
-            android.Manifest.permission.BLUETOOTH_ADVERTISE,
-            Manifest.permission.ACCESS_FINE_LOCATION
-    };
+//    private static final String[] permissions = new String[] {
+//            android.Manifest.permission.BLUETOOTH_SCAN,
+//            android.Manifest.permission.BLUETOOTH_CONNECT,
+//            android.Manifest.permission.BLUETOOTH_ADVERTISE,
+//            Manifest.permission.ACCESS_FINE_LOCATION
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +139,8 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(bluetoothDeviceReceiver, filter);
 
-        PermissionUtil.checkPermission(this, permissions,1);
+//        PermissionUtil.checkPermission(this, permissions, 1);
+        PermissionUtil.checkAndRequestPermissions(this, 1);
         refreshList();
 
         handler = new Handler(Looper.getMainLooper());
@@ -168,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(int position) {
                 Toast.makeText(MainActivity.this, "pair with: " + findDevices.get(position).getName(), Toast.LENGTH_SHORT).show();
                 pairWithDevice(position);
-
             }
         });
         pairAdapter.setOnItemClickListener(new BluetoothDeviceAdapter.OnItemClickListener() {
@@ -199,6 +201,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+        registerReceiver(bondStateReceiver, filter1);
 
     }
 
@@ -206,13 +210,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(bluetoothDeviceReceiver);
+        unregisterReceiver(bondStateReceiver);
         bluetoothAdapter.cancelDiscovery();
     }
 
     private void refreshList() {
         findDevices.clear();
         pairDevices.clear();
-        if (PermissionUtil.checkPermission(this, permissions,1)) {
+        if (PermissionUtil.checkAndRequestPermissions(this, 1)) {
+//        if (PermissionUtil.checkPermission(this, permissions,1)) {
             if (bluetoothAdapter != null && !bluetoothAdapter.isEnabled()) {
                 Toast.makeText(this, "bluetooth is off", Toast.LENGTH_SHORT).show();
             } else {
@@ -256,8 +262,13 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
-
-                refreshList();
+                //refreshList();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshList();
+                    }
+                });
             }
         }).start();
     }
@@ -311,12 +322,34 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "lack permission", Toast.LENGTH_SHORT).show();
                     for (int i = 0; i < grantResults.length; i++) {
                         Log.d("ocean", permissions[i] + " failed!");
-                        jumpToSettings();
                     }
+                    jumpToSettings();
                 }
                 break;
         }
     }
+
+    private BroadcastReceiver bondStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                int bondState = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.BOND_NONE);
+                int previousBondState = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.BOND_NONE);
+
+                // 当配对状态变为 BOND_BONDED（已配对）时，刷新列表
+                if (bondState == BluetoothDevice.BOND_BONDED) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            refreshList(); // 刷新最新已配对设备列表
+                        }
+                    });
+                }
+            }
+        }
+    };
 
     private void jumpToSettings() {
         Intent intent = new Intent();

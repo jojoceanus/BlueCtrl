@@ -40,6 +40,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    //手动添加
+    //user dependencies
     implementation("androidx.palette:palette:1.0.0")
 }
