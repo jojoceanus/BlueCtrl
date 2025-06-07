@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -41,6 +43,7 @@ public class SerialConnectActivity extends AppCompatActivity {
     private ScrollView receiveScrollView;
     private EditText sendEditText;
     private Button sendButton;
+    private CheckBox hexFormat;
     private BluetoothAdapter bluetoothAdapter;
     private String deviceName;
     private String deviceAddress;
@@ -66,6 +69,7 @@ public class SerialConnectActivity extends AppCompatActivity {
         receiveScrollView = findViewById(R.id.receive_scrollview);
         sendEditText = findViewById(R.id.send_edittext);
         sendButton = findViewById(R.id.send_button);
+        hexFormat = findViewById(R.id.hex_format);
 
         //获取全局背景并设置颜色
         GlobalBackground backgroundLayout = findViewById(R.id.background_layout);
@@ -129,8 +133,19 @@ public class SerialConnectActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String messageToSend = sendEditText.getText().toString();
+                String rawMessage = sendEditText.getText().toString();
+                String messageToSend;
+                // 根据CheckBox状态决定是否转换
+                if (hexFormat.isChecked()) {
+                    messageToSend = convertHex(rawMessage);
+                    if(messageToSend.isEmpty()) {
+                        return;
+                    }
+                } else {
+                    messageToSend = rawMessage; // 不转换，直接发送原始文本
+                }
                 bluetoothHelper.sendMessage(messageToSend);
+                //bluetoothHelper.sendMessage(rawMessage);
                 //sendtext.setText(""); // 清空输入框
             }
         });
@@ -143,4 +158,37 @@ public class SerialConnectActivity extends AppCompatActivity {
         bluetoothHelper.closeConnection();
     }
 
+    private String convertHex(String input) {
+        // 处理空输入
+        if (input == null || input.isEmpty()) {
+            Toast.makeText(this, "illeagle hex string", Toast.LENGTH_SHORT).show();
+            return "";
+        }
+        // 校验长度必须为偶数（每两位表示一个字节）
+        if (input.length() % 2 != 0) {
+            Toast.makeText(this, "illeagle hex string", Toast.LENGTH_SHORT).show();
+            return "";
+            // throw new IllegalArgumentException("输入字符串长度必须为偶数（每两位表示一个十六进制字节）");
+        }
+        StringBuilder result = new StringBuilder();
+        // 遍历每两位十六进制字符
+        for (int i = 0; i < input.length(); i += 2) {
+            // 截取当前两位十六进制字符（如 "48", "65"）
+            String hexPair = input.substring(i, i + 2);
+            try {
+                // 将十六进制字符串转换为整数（0-255）
+                int byteValue = Integer.parseInt(hexPair, 16);
+
+                // 转换为字符并追加到结果
+                result.append((char) byteValue);
+            } catch (NumberFormatException e) {
+                // 捕获无效十六进制字符异常（如包含 G、H 等非十六进制字符）
+                // throw new IllegalArgumentException("无效的十六进制字符: '" + hexPair + "'", e);
+                Toast.makeText(this, "illeagle hex string", Toast.LENGTH_SHORT).show();
+                return "";
+            }
+        }
+
+        return result.toString();
+    }
 }
