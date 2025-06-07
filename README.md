@@ -15,6 +15,6 @@ Support Android P(API 28, Android 9.0) +.
 1. Install `Android Studio`
 2. Clone this repository
     ```bash
-    https://github.com/jojoceanus/BlueCtrl.git
+    git clone https://github.com/jojoceanus/BlueCtrl.git
     ```
 3. Open the project in `Android Studio`
